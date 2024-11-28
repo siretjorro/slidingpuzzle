@@ -10,8 +10,10 @@ class PuzzleViewModel : ViewModel() {
     private val _action = MutableLiveData<Action>()
     val action = _action as LiveData<Action>
 
-    private val _state: MutableLiveData<State> = MutableLiveData<State>()
-    val state = _state as LiveData<State>
+    private val _gameState: MutableLiveData<GameState> = MutableLiveData<GameState>()
+    val gameState = _gameState as LiveData<GameState>
+
+    private lateinit var game: Game
 
     fun onSelectImageClicked() {
         _action.value = Action.OpenImagePicker
@@ -19,14 +21,15 @@ class PuzzleViewModel : ViewModel() {
 
     fun onImageSelected(uri: Uri?) {
         uri?.let {
+            game = Game(3)
             _action.value = Action.StartPuzzle(uri)
+            _gameState.value = game.gameState
         }
     }
 
-    sealed class State {
-        data object Default : State()
-        data object Progress : State()
-        data object Error : State()
+    fun onPieceClicked(index: Int) {
+        game.move(index)
+        _gameState.value = game.gameState
     }
 
     sealed class Action {

@@ -1,5 +1,6 @@
 package io.github.siretjorro.slidingpuzzle
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ class PuzzleFragment : Fragment() {
     private val viewModel: PuzzleViewModel by viewModels()
 
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+    private lateinit var images: List<Bitmap>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,19 +75,7 @@ class PuzzleFragment : Fragment() {
                 is PuzzleViewModel.Action.StartPuzzle -> startPuzzle(action.uri)
             }
         }
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                PuzzleViewModel.State.Default -> {
-
-                }
-                PuzzleViewModel.State.Progress -> {
-
-                }
-                PuzzleViewModel.State.Error -> {
-
-                }
-            }
-        }
+        viewModel.gameState.observe(viewLifecycleOwner) { gameState -> showBoard(gameState) }
     }
 
     private fun openMediaPicker() {
@@ -96,19 +86,30 @@ class PuzzleFragment : Fragment() {
         val originalBitmap = BitmapUtil.getBitmapFromUri(uri, requireContext())
 
         originalBitmap?.let {
-            val imagePieces = BitmapUtil.splitBitmap(
+            images = BitmapUtil.splitBitmap(
                 BitmapUtil.cropBitmapToSquare(originalBitmap),
                 resources.getInteger(R.integer.rows),
                 resources.getInteger(R.integer.rows)
-            ).shuffled()
+            )
+        }
 
-            for (i in imagePieces.indices) {
-                val imageView = binding.gridLayout.getChildAt(i) as ImageView
-                imageView.setImageBitmap(imagePieces[i])
-            }
+        startTimer()
+    }
 
-            val lastImageView = binding.gridLayout.getChildAt(resources.getInteger(R.integer.rows) * resources.getInteger(R.integer.rows) - 1) as ImageView
-            lastImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.empty_piece))
+    private fun startTimer() {
+        // TODO
+    }
+
+    private fun showBoard(gameState: GameState) {
+        for (i in gameState.state.indices) {
+            val imageView = binding.gridLayout.getChildAt(i) as ImageView
+            imageView.setImageBitmap(images[gameState.state[i]])
+            imageView.setOnClickListener { viewModel.onPieceClicked(i) }
+        }
+
+        if (!gameState.isSolved) {
+            val emptyImageView = binding.gridLayout.getChildAt(gameState.getEmptyIndex()) as ImageView
+            emptyImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.empty_piece))
         }
     }
 }
