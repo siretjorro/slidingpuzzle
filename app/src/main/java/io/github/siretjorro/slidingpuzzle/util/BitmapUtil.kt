@@ -8,9 +8,7 @@ import android.net.Uri
 object BitmapUtil {
     fun getBitmapFromUri(uri: Uri, context: Context): Bitmap? {
         return try {
-            // Open an input stream from the content resolver using the Uri
             val inputStream = context.contentResolver.openInputStream(uri)
-            // Decode the input stream into a Bitmap
             BitmapFactory.decodeStream(inputStream)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -19,11 +17,8 @@ object BitmapUtil {
     }
 
     fun splitBitmap(original: Bitmap, rows: Int, cols: Int): List<Bitmap> {
-        val width = original.width
-        val height = original.height
-
-        val pieceWidth = width / cols
-        val pieceHeight = height / rows
+        val pieceWidth = original.width / cols
+        val pieceHeight = original.height / rows
 
         val pieces = mutableListOf<Bitmap>()
 
@@ -44,12 +39,12 @@ object BitmapUtil {
         val width = original.width
         val height = original.height
 
-        if (width > height) {
-            return Bitmap.createBitmap(original, (width - height) / 2, 0, height, height)
+        return if (width > height) {
+            Bitmap.createBitmap(original, (width - height) / 2, 0, height, height)
         } else if (width < height) {
-            return Bitmap.createBitmap(original, 0, (width - height) / 2, width, width)
+            Bitmap.createBitmap(original, 0, (width - height) / 2, width, width)
         } else {
-            return original
+            original
         }
     }
 }
