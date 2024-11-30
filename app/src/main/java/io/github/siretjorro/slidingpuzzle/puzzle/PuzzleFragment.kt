@@ -36,12 +36,12 @@ class PuzzleFragment : BaseFragment<FragmentPuzzleBinding>() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? = createBinding(FragmentPuzzleBinding.inflate(inflater, container, false))
 
     override fun onViewCreated(
         view: View,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
         setUpUI()
@@ -91,7 +91,7 @@ class PuzzleFragment : BaseFragment<FragmentPuzzleBinding>() {
                     BitmapUtil.splitBitmap(
                         BitmapUtil.cropBitmapToSquare(originalBitmap),
                         resources.getInteger(R.integer.grid_size),
-                        resources.getInteger(R.integer.grid_size)
+                        resources.getInteger(R.integer.grid_size),
                     )
 
                 viewModel.onImageSelected(pieces)
@@ -112,7 +112,7 @@ class PuzzleFragment : BaseFragment<FragmentPuzzleBinding>() {
         emptyImageView.setImageDrawable(
             ContextCompat.getDrawable(
                 requireContext(),
-                R.drawable.empty_piece
+                R.drawable.empty_piece,
             ),
         )
     }

@@ -8,7 +8,7 @@ import android.net.Uri
 object BitmapUtil {
     fun getBitmapFromUri(
         uri: Uri,
-        context: Context
+        context: Context,
     ): Bitmap? =
         try {
             val inputStream = context.contentResolver.openInputStream(uri)
@@ -21,7 +21,7 @@ object BitmapUtil {
     fun splitBitmap(
         original: Bitmap,
         rows: Int,
-        cols: Int
+        cols: Int,
     ): List<Bitmap> {
         val pieceWidth = original.width / cols
         val pieceHeight = original.height / rows

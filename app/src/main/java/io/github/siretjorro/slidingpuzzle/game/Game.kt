@@ -4,7 +4,7 @@ import java.util.Collections
 import kotlin.math.abs
 
 class Game(
-    private val gridSize: Int
+    private val gridSize: Int,
 ) {
     private lateinit var gameState: GameState
 
@@ -34,7 +34,7 @@ class Game(
 
     private fun isSolvable(
         puzzle: List<Int>,
-        gridSize: Int
+        gridSize: Int,
     ): Boolean {
         val inversionCount = countInversions(puzzle)
         val emptyTileRowFromBottom = findEmptyTileRowFromBottom(puzzle, gridSize)
@@ -62,7 +62,7 @@ class Game(
 
     private fun findEmptyTileRowFromBottom(
         puzzle: List<Int>,
-        gridSize: Int
+        gridSize: Int,
     ): Int {
         val emptyTileIndex = puzzle.indexOf(gridSize * gridSize - 1)
         val emptyTileRow = emptyTileIndex / gridSize
