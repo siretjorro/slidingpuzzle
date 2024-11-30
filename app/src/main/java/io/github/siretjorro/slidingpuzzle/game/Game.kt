@@ -5,31 +5,24 @@ import kotlin.math.abs
 
 class Game(private val gridSize: Int) {
 
-    lateinit var gameState: GameState
+    private lateinit var gameState: GameState
 
-    init {
-        startGame()
-    }
-
-    private fun startGame() {
+    fun startGame(): GameState {
         gameState = GameState(generatePuzzle(), gridSize)
-    }
-
-    private fun generatePuzzle(): MutableList<Int> {
-        return (0 until gridSize * gridSize).toList().shuffled().toMutableList()
+        return gameState
     }
 
     // makes move and returns game state if the move is valid
     fun move(selectedIndex: Int): GameState? {
-        if (isMoveValid(selectedIndex)) {
+        if (isMoveValid(selectedIndex) && !gameState.isSolved) {
             Collections.swap(gameState.gameBoard, gameState.getEmptyIndex(), selectedIndex)
             return gameState
         }
         return null
     }
 
-    fun isSolved(): Boolean {
-        return gameState.isSolved
+    private fun generatePuzzle(): MutableList<Int> {
+        return (0 until gridSize * gridSize).toList().shuffled().toMutableList()
     }
 
     private fun isMoveValid(index: Int): Boolean {

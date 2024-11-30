@@ -37,10 +37,13 @@ class PuzzleViewModel : ViewModel() {
         }
     }
 
+    fun init() {
+        game = Game(3)
+    }
+
     fun onImageSelected(pieces: List<Bitmap>) {
         bitmaps = pieces
-        game = Game(3)
-        updateGameState(game.gameState)
+        updateGameState(game.startGame())
         startStopWatch()
     }
 

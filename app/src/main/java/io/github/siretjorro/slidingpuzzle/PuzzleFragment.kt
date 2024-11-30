@@ -72,6 +72,7 @@ class PuzzleFragment : Fragment() {
     }
 
     private fun initViewModel() {
+        viewModel.init()
         viewModel.gameBoard.observe(viewLifecycleOwner) { gameBoard -> showBoard(gameBoard) }
         viewModel.emptyIndex.observe(viewLifecycleOwner) { emptyIndex -> hideEmpty(emptyIndex) }
         viewModel.time.observe(viewLifecycleOwner) { time -> showStopwatch(time) }
@@ -122,7 +123,5 @@ class PuzzleFragment : Fragment() {
 
     private fun showSolved(isSolved: Boolean) {
         binding.infoTextView.isVisible = isSolved
-
-        // TODO: remove click listeners
     }
 }
