@@ -1,4 +1,4 @@
-package io.github.siretjorro.slidingpuzzle
+package io.github.siretjorro.slidingpuzzle.puzzle
 
 import android.graphics.Bitmap
 import android.net.Uri
@@ -12,46 +12,46 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import io.github.siretjorro.slidingpuzzle.R
+import io.github.siretjorro.slidingpuzzle.common.BaseFragment
 import io.github.siretjorro.slidingpuzzle.databinding.FragmentPuzzleBinding
 import io.github.siretjorro.slidingpuzzle.util.BitmapUtil
 import io.github.siretjorro.slidingpuzzle.util.getMinutes
 import io.github.siretjorro.slidingpuzzle.util.getSeconds
 
-class PuzzleFragment : Fragment() {
-
-    private lateinit var binding: FragmentPuzzleBinding
+class PuzzleFragment : BaseFragment<FragmentPuzzleBinding>() {
     private val viewModel: PuzzleViewModel by viewModels()
 
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            onImageSelected(uri)
-        }
+        pickMedia =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                onImageSelected(uri)
+            }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentPuzzleBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
-    }
+    ): View? = createBinding(FragmentPuzzleBinding.inflate(inflater, container, false))
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
         super.onViewCreated(view, savedInstanceState)
         setUpUI()
         initViewModel()
     }
 
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        binding = null
-//    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     private fun setUpUI() {
         binding.selectImageButton.setOnClickListener { openMediaPicker() }
@@ -67,7 +67,8 @@ class PuzzleFragment : Fragment() {
 
                     binding.puzzleGridLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
-            })
+            },
+        )
     }
 
     private fun initViewModel() {
@@ -86,11 +87,12 @@ class PuzzleFragment : Fragment() {
         uri?.let {
             val originalBitmap = BitmapUtil.getBitmapFromUri(uri, requireContext())
             originalBitmap?.let {
-                val pieces = BitmapUtil.splitBitmap(
-                    BitmapUtil.cropBitmapToSquare(originalBitmap),
-                    resources.getInteger(R.integer.grid_size),
-                    resources.getInteger(R.integer.grid_size)
-                )
+                val pieces =
+                    BitmapUtil.splitBitmap(
+                        BitmapUtil.cropBitmapToSquare(originalBitmap),
+                        resources.getInteger(R.integer.grid_size),
+                        resources.getInteger(R.integer.grid_size)
+                    )
 
                 viewModel.onImageSelected(pieces)
             }
@@ -111,7 +113,7 @@ class PuzzleFragment : Fragment() {
             ContextCompat.getDrawable(
                 requireContext(),
                 R.drawable.empty_piece
-            )
+            ),
         )
     }
 

@@ -1,6 +1,9 @@
 package io.github.siretjorro.slidingpuzzle.game
 
-data class GameState(val gameBoard: MutableList<Int>, val gridSize: Int) {
+data class GameState(
+    val gameBoard: MutableList<Int>,
+    val gridSize: Int
+) {
     val isSolved: Boolean
         get() {
             for (i in 0 until gameBoard.size - 1) {
@@ -11,7 +14,5 @@ data class GameState(val gameBoard: MutableList<Int>, val gridSize: Int) {
             return true
         }
 
-    fun getEmptyIndex(): Int {
-        return gameBoard.indexOf(gridSize * gridSize - 1)
-    }
+    fun getEmptyIndex(): Int = gameBoard.indexOf(gridSize * gridSize - 1)
 }

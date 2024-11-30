@@ -6,17 +6,23 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 
 object BitmapUtil {
-    fun getBitmapFromUri(uri: Uri, context: Context): Bitmap? {
-        return try {
+    fun getBitmapFromUri(
+        uri: Uri,
+        context: Context
+    ): Bitmap? =
+        try {
             val inputStream = context.contentResolver.openInputStream(uri)
             BitmapFactory.decodeStream(inputStream)
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
-    }
 
-    fun splitBitmap(original: Bitmap, rows: Int, cols: Int): List<Bitmap> {
+    fun splitBitmap(
+        original: Bitmap,
+        rows: Int,
+        cols: Int
+    ): List<Bitmap> {
         val pieceWidth = original.width / cols
         val pieceHeight = original.height / rows
 

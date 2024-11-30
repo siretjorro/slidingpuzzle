@@ -3,8 +3,9 @@ package io.github.siretjorro.slidingpuzzle.game
 import java.util.Collections
 import kotlin.math.abs
 
-class Game(private val gridSize: Int) {
-
+class Game(
+    private val gridSize: Int
+) {
     private lateinit var gameState: GameState
 
     fun startGame(): GameState {
@@ -31,7 +32,10 @@ class Game(private val gridSize: Int) {
         return puzzle
     }
 
-    private fun isSolvable(puzzle: List<Int>, gridSize: Int): Boolean {
+    private fun isSolvable(
+        puzzle: List<Int>,
+        gridSize: Int
+    ): Boolean {
         val inversionCount = countInversions(puzzle)
         val emptyTileRowFromBottom = findEmptyTileRowFromBottom(puzzle, gridSize)
 
@@ -39,7 +43,7 @@ class Game(private val gridSize: Int) {
             inversionCount % 2 == 0
         } else {
             (inversionCount % 2 == 0 && emptyTileRowFromBottom % 2 != 0) ||
-                    (inversionCount % 2 != 0 && emptyTileRowFromBottom % 2 == 0)
+                (inversionCount % 2 != 0 && emptyTileRowFromBottom % 2 == 0)
         }
     }
 
@@ -56,7 +60,10 @@ class Game(private val gridSize: Int) {
         return inversions
     }
 
-    private fun findEmptyTileRowFromBottom(puzzle: List<Int>, gridSize: Int): Int {
+    private fun findEmptyTileRowFromBottom(
+        puzzle: List<Int>,
+        gridSize: Int
+    ): Int {
         val emptyTileIndex = puzzle.indexOf(gridSize * gridSize - 1)
         val emptyTileRow = emptyTileIndex / gridSize
 

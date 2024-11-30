@@ -1,4 +1,4 @@
-package io.github.siretjorro.slidingpuzzle
+package io.github.siretjorro.slidingpuzzle.puzzle
 
 import android.graphics.Bitmap
 import android.os.Handler
@@ -10,7 +10,6 @@ import io.github.siretjorro.slidingpuzzle.game.Game
 import io.github.siretjorro.slidingpuzzle.game.GameState
 
 class PuzzleViewModel : ViewModel() {
-
     private val _gameBoard: MutableLiveData<List<Bitmap>> = MutableLiveData<List<Bitmap>>()
     val gameBoard = _gameBoard as LiveData<List<Bitmap>>
 
@@ -29,13 +28,14 @@ class PuzzleViewModel : ViewModel() {
     private var timeStarted: Long = 0
     private var timeElapsed: Long = 0
     private val handler: Handler = Handler(Looper.getMainLooper())
-    private var stopwatchRunnable: Runnable = object : Runnable {
-        override fun run() {
-            timeElapsed = System.currentTimeMillis() - timeStarted
-            _time.value = timeElapsed
-            handler.postDelayed(this, 1000)
+    private var stopwatchRunnable: Runnable =
+        object : Runnable {
+            override fun run() {
+                timeElapsed = System.currentTimeMillis() - timeStarted
+                _time.value = timeElapsed
+                handler.postDelayed(this, 1000)
+            }
         }
-    }
 
     fun init(gridSize: Int) {
         game = Game(gridSize)
