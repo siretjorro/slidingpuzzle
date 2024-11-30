@@ -1,11 +1,11 @@
 package io.github.siretjorro.slidingpuzzle
 
 
-data class GameState(val state: MutableList<Int>, val size: Int) {
+data class GameState(val gameBoard: MutableList<Int>, val gridSize: Int) {
     val isSolved: Boolean
         get() {
-            for (i in 0 until state.size - 1) {
-                if (state[i] > state[i + 1]) {
+            for (i in 0 until gameBoard.size - 1) {
+                if (gameBoard[i] > gameBoard[i + 1]) {
                     return false
                 }
             }
@@ -13,6 +13,6 @@ data class GameState(val state: MutableList<Int>, val size: Int) {
         }
 
     fun getEmptyIndex(): Int {
-        return state.indexOf(size * size - 1)
+        return gameBoard.indexOf(gridSize * gridSize - 1)
     }
 }

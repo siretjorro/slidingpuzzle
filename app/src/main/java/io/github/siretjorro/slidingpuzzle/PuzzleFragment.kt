@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import io.github.siretjorro.slidingpuzzle.databinding.FragmentPuzzleBinding
@@ -23,12 +24,11 @@ class PuzzleFragment : Fragment() {
     private val viewModel: PuzzleViewModel by viewModels()
 
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
-    private lateinit var images: List<Bitmap>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            viewModel.onImageSelected(uri)
+            onImageSelected(uri)
         }
     }
 
@@ -53,15 +53,15 @@ class PuzzleFragment : Fragment() {
 //    }
 
     private fun setUpUI() {
-        binding.selectImageButton.setOnClickListener { viewModel.onSelectImageClicked() }
+        binding.selectImageButton.setOnClickListener { openMediaPicker() }
         binding.puzzleGridLayout.viewTreeObserver.addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    val pWidth = binding.puzzleGridLayout.width
-                    val pParams: ViewGroup.LayoutParams = binding.puzzleGridLayout.layoutParams
-                    pParams.width = pWidth
-                    pParams.height = pWidth
-                    binding.puzzleGridLayout.layoutParams = pParams
+                    val gridLayoutWidth = binding.puzzleGridLayout.width
+                    val gridLayoutParams = binding.puzzleGridLayout.layoutParams
+                    gridLayoutParams.width = gridLayoutWidth
+                    gridLayoutParams.height = gridLayoutWidth
+                    binding.puzzleGridLayout.layoutParams = gridLayoutParams
 
                     binding.puzzleGridLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
@@ -69,53 +69,55 @@ class PuzzleFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel.action.observe(viewLifecycleOwner) { action ->
-            when (action) {
-                PuzzleViewModel.Action.OpenImagePicker -> openMediaPicker()
-                is PuzzleViewModel.Action.StartPuzzle -> startPuzzle(action.uri)
-            }
-        }
-        viewModel.gameState.observe(viewLifecycleOwner) { gameState -> showBoard(gameState) }
+        viewModel.gameBoard.observe(viewLifecycleOwner) { gameBoard -> showBoard(gameBoard) }
+        viewModel.emptyIndex.observe(viewLifecycleOwner) { emptyIndex -> hideEmpty(emptyIndex) }
+        viewModel.isSolved.observe(viewLifecycleOwner) { isSolved -> showSolved(isSolved) }
     }
 
     private fun openMediaPicker() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-    private fun startPuzzle(uri: Uri) {
-        val originalBitmap = BitmapUtil.getBitmapFromUri(uri, requireContext())
+    private fun onImageSelected(uri: Uri?) {
+        uri?.let {
+            val originalBitmap = BitmapUtil.getBitmapFromUri(uri, requireContext())
+            originalBitmap?.let {
+                val pieces = BitmapUtil.splitBitmap(
+                    BitmapUtil.cropBitmapToSquare(originalBitmap),
+                    resources.getInteger(R.integer.rows),
+                    resources.getInteger(R.integer.rows)
+                )
 
-        originalBitmap?.let {
-            images = BitmapUtil.splitBitmap(
-                BitmapUtil.cropBitmapToSquare(originalBitmap),
-                resources.getInteger(R.integer.rows),
-                resources.getInteger(R.integer.rows)
-            )
+                viewModel.onImageSelected(pieces)
+            }
         }
-
-        startTimer()
     }
 
-    private fun startTimer() {
+    private fun startStopWatch() {
         // TODO
     }
 
-    private fun showBoard(gameState: GameState) {
-        for (i in gameState.state.indices) {
+    private fun showBoard(gameBoard: List<Bitmap>) {
+        for (i in gameBoard.indices) {
             val imageView = binding.puzzleGridLayout.getChildAt(i) as ImageView
-            imageView.setImageBitmap(images[gameState.state[i]])
+            imageView.setImageBitmap(gameBoard[i])
             imageView.setOnClickListener { viewModel.onPieceClicked(i) }
         }
+    }
 
-        if (!gameState.isSolved) {
-            val emptyImageView =
-                binding.puzzleGridLayout.getChildAt(gameState.getEmptyIndex()) as ImageView
-            emptyImageView.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.empty_piece
-                )
+    private fun hideEmpty(emptyIndex: Int) {
+        val emptyImageView = binding.puzzleGridLayout.getChildAt(emptyIndex) as ImageView
+        emptyImageView.setImageDrawable(
+            ContextCompat.getDrawable(
+                requireContext(),
+                R.drawable.empty_piece
             )
-        }
+        )
+    }
+
+    private fun showSolved(isSolved: Boolean) {
+        binding.infoTextView.isVisible = isSolved
+
+        // TODO: remove click listeners
     }
 }

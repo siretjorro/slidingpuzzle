@@ -3,7 +3,7 @@ package io.github.siretjorro.slidingpuzzle
 import java.util.Collections
 import kotlin.math.abs
 
-class Game(val size: Int) {
+class Game(private val gridSize: Int) {
 
     lateinit var gameState: GameState
 
@@ -12,27 +12,32 @@ class Game(val size: Int) {
     }
 
     private fun startGame() {
-        gameState = GameState(generatePuzzle(), size)
+        gameState = GameState(generatePuzzle(), gridSize)
     }
 
     private fun generatePuzzle(): MutableList<Int> {
-        return (0 until size * size).toList().shuffled().toMutableList()
+        return (0 until gridSize * gridSize).toList().shuffled().toMutableList()
     }
 
+    // makes move and returns game state if the move is valid
     fun move(selectedIndex: Int): GameState? {
         if (isMoveValid(selectedIndex)) {
-            Collections.swap(gameState.state, gameState.getEmptyIndex(), selectedIndex)
+            Collections.swap(gameState.gameBoard, gameState.getEmptyIndex(), selectedIndex)
             return gameState
         }
         return null
     }
 
-    private fun isMoveValid(index: Int): Boolean {
-        val selectedRow = index / size
-        val selectedCol = index % size
+    fun isSolved(): Boolean {
+        return gameState.isSolved
+    }
 
-        val emptyRow = gameState.getEmptyIndex() / size
-        val emptyCol = gameState.getEmptyIndex() % size
+    private fun isMoveValid(index: Int): Boolean {
+        val selectedRow = index / gridSize
+        val selectedCol = index % gridSize
+
+        val emptyRow = gameState.getEmptyIndex() / gridSize
+        val emptyCol = gameState.getEmptyIndex() % gridSize
 
         val areAdjacentHorizontally = selectedRow == emptyRow && abs(selectedCol - emptyCol) == 1
         val areAdjacentVertically = selectedCol == emptyCol && abs(selectedRow - emptyRow) == 1
