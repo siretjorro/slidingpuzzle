@@ -37,8 +37,8 @@ class PuzzleViewModel : ViewModel() {
         }
     }
 
-    fun init() {
-        game = Game(3)
+    fun init(gridSize: Int) {
+        game = Game(gridSize)
     }
 
     fun onImageSelected(pieces: List<Bitmap>) {

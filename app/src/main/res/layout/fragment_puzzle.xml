@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/size_8"
+            android:layout_marginVertical="@dimen/size_16"
             app:layout_constraintBottom_toTopOf="@id/puzzle_grid_layout"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -74,9 +75,9 @@
             android:layout_marginEnd="@dimen/size_8"
             android:layout_marginBottom="@dimen/size_32"
             android:background="@drawable/puzzle_background"
-            android:columnCount="@integer/rows"
+            android:columnCount="@integer/grid_size"
             android:padding="@dimen/size_8"
-            android:rowCount="@integer/rows"
+            android:rowCount="@integer/grid_size"
             android:stretchMode="columnWidth"
             android:useDefaultMargins="true"
             app:layout_constraintBottom_toBottomOf="parent"

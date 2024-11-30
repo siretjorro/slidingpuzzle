@@ -8,7 +8,7 @@ class Game(private val gridSize: Int) {
     private lateinit var gameState: GameState
 
     fun startGame(): GameState {
-        gameState = GameState(generatePuzzle(), gridSize)
+        gameState = GameState(generateSolvablePuzzle(gridSize).toMutableList(), gridSize)
         return gameState
     }
 
@@ -21,8 +21,46 @@ class Game(private val gridSize: Int) {
         return null
     }
 
-    private fun generatePuzzle(): MutableList<Int> {
-        return (0 until gridSize * gridSize).toList().shuffled().toMutableList()
+    private fun generateSolvablePuzzle(gridSize: Int): List<Int> {
+        val totalTiles = gridSize * gridSize
+        var puzzle: List<Int>
+        do {
+            puzzle = (0 until totalTiles).toList().shuffled()
+        } while (!isSolvable(puzzle, gridSize))
+
+        return puzzle
+    }
+
+    private fun isSolvable(puzzle: List<Int>, gridSize: Int): Boolean {
+        val inversionCount = countInversions(puzzle)
+        val emptyTileRowFromBottom = findEmptyTileRowFromBottom(puzzle, gridSize)
+
+        return if (gridSize % 2 != 0) {
+            inversionCount % 2 == 0
+        } else {
+            (inversionCount % 2 == 0 && emptyTileRowFromBottom % 2 != 0) ||
+                    (inversionCount % 2 != 0 && emptyTileRowFromBottom % 2 == 0)
+        }
+    }
+
+    private fun countInversions(puzzle: List<Int>): Int {
+        var inversions = 0
+        for (i in 0 until puzzle.size - 1) {
+            for (j in i + 1 until puzzle.size) {
+                if (puzzle[i] > puzzle[j] && puzzle[i] != 0 && puzzle[j] != 0) {
+                    inversions++
+                }
+            }
+        }
+
+        return inversions
+    }
+
+    private fun findEmptyTileRowFromBottom(puzzle: List<Int>, gridSize: Int): Int {
+        val emptyTileIndex = puzzle.indexOf(gridSize * gridSize - 1)
+        val emptyTileRow = emptyTileIndex / gridSize
+
+        return gridSize - emptyTileRow
     }
 
     private fun isMoveValid(index: Int): Boolean {

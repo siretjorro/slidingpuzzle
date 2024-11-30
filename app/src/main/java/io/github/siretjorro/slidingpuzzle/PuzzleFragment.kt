@@ -12,7 +12,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import io.github.siretjorro.slidingpuzzle.databinding.FragmentPuzzleBinding
@@ -72,7 +71,7 @@ class PuzzleFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel.init()
+        viewModel.init(resources.getInteger(R.integer.grid_size))
         viewModel.gameBoard.observe(viewLifecycleOwner) { gameBoard -> showBoard(gameBoard) }
         viewModel.emptyIndex.observe(viewLifecycleOwner) { emptyIndex -> hideEmpty(emptyIndex) }
         viewModel.time.observe(viewLifecycleOwner) { time -> showStopwatch(time) }
@@ -89,8 +88,8 @@ class PuzzleFragment : Fragment() {
             originalBitmap?.let {
                 val pieces = BitmapUtil.splitBitmap(
                     BitmapUtil.cropBitmapToSquare(originalBitmap),
-                    resources.getInteger(R.integer.rows),
-                    resources.getInteger(R.integer.rows)
+                    resources.getInteger(R.integer.grid_size),
+                    resources.getInteger(R.integer.grid_size)
                 )
 
                 viewModel.onImageSelected(pieces)
@@ -122,6 +121,6 @@ class PuzzleFragment : Fragment() {
     }
 
     private fun showSolved(isSolved: Boolean) {
-        binding.infoTextView.isVisible = isSolved
+        binding.infoTextView.visibility = if (isSolved) View.VISIBLE else View.INVISIBLE
     }
 }
