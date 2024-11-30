@@ -2,6 +2,6 @@
     <string name="app_name">SlidingPuzzle</string>
     <string name="puzzle_title">sliding puzzle</string>
     <string name="select_image">select image</string>
-    <string name="timer">⏱️ %s</string>
-    <string name="info">puzzle solved! select another image to start a new game</string>
+    <string name="stopwatch">⏱️ %02d : %02d</string>
+    <string name="info">puzzle solved!\nselect another image to start a new game</string>
 </resources>

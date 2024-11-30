@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import io.github.siretjorro.slidingpuzzle.databinding.FragmentPuzzleBinding
 import io.github.siretjorro.slidingpuzzle.util.BitmapUtil
+import io.github.siretjorro.slidingpuzzle.util.getMinutes
+import io.github.siretjorro.slidingpuzzle.util.getSeconds
 
 class PuzzleFragment : Fragment() {
 
@@ -54,6 +56,7 @@ class PuzzleFragment : Fragment() {
 
     private fun setUpUI() {
         binding.selectImageButton.setOnClickListener { openMediaPicker() }
+        binding.stopwatchTextView.text = resources.getString(R.string.stopwatch, 0, 0)
         binding.puzzleGridLayout.viewTreeObserver.addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
@@ -71,6 +74,7 @@ class PuzzleFragment : Fragment() {
     private fun initViewModel() {
         viewModel.gameBoard.observe(viewLifecycleOwner) { gameBoard -> showBoard(gameBoard) }
         viewModel.emptyIndex.observe(viewLifecycleOwner) { emptyIndex -> hideEmpty(emptyIndex) }
+        viewModel.time.observe(viewLifecycleOwner) { time -> showStopwatch(time) }
         viewModel.isSolved.observe(viewLifecycleOwner) { isSolved -> showSolved(isSolved) }
     }
 
@@ -93,10 +97,6 @@ class PuzzleFragment : Fragment() {
         }
     }
 
-    private fun startStopWatch() {
-        // TODO
-    }
-
     private fun showBoard(gameBoard: List<Bitmap>) {
         for (i in gameBoard.indices) {
             val imageView = binding.puzzleGridLayout.getChildAt(i) as ImageView
@@ -113,6 +113,11 @@ class PuzzleFragment : Fragment() {
                 R.drawable.empty_piece
             )
         )
+    }
+
+    private fun showStopwatch(time: Long) {
+        binding.stopwatchTextView.text =
+            resources.getString(R.string.stopwatch, time.getMinutes(), time.getSeconds())
     }
 
     private fun showSolved(isSolved: Boolean) {

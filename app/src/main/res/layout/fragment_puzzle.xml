@@ -42,13 +42,12 @@
                 app:layout_constraintTop_toBottomOf="@id/title_text_view" />
 
             <TextView
-                android:id="@+id/timer_text_view"
+                android:id="@+id/stopwatch_text_view"
                 style="@style/Text.Body18"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/size_24"
-                android:text="@string/timer"
-                android:visibility="gone"
+                android:text="@string/stopwatch"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/select_image_button" />
@@ -60,10 +59,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/size_16"
                 android:text="@string/info"
-                android:visibility="gone"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/timer_text_view" />
+                app:layout_constraintTop_toBottomOf="@id/stopwatch_text_view" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <GridLayout

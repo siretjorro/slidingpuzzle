@@ -1,4 +1,4 @@
-package io.github.siretjorro.slidingpuzzle
+package io.github.siretjorro.slidingpuzzle.game
 
 
 data class GameState(val gameBoard: MutableList<Int>, val gridSize: Int) {

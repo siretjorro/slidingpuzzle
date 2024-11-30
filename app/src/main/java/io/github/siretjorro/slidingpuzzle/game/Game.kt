@@ -1,4 +1,4 @@
-package io.github.siretjorro.slidingpuzzle
+package io.github.siretjorro.slidingpuzzle.game
 
 import java.util.Collections
 import kotlin.math.abs
