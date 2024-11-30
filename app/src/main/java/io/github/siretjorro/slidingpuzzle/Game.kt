@@ -12,18 +12,19 @@ class Game(val size: Int) {
     }
 
     private fun startGame() {
-        gameState = GameState(generatePuzzle(), size, false)
+        gameState = GameState(generatePuzzle(), size)
     }
 
     private fun generatePuzzle(): MutableList<Int> {
         return (0 until size * size).toList().shuffled().toMutableList()
     }
 
-    fun move(selectedIndex: Int) {
+    fun move(selectedIndex: Int): GameState? {
         if (isMoveValid(selectedIndex)) {
             Collections.swap(gameState.state, gameState.getEmptyIndex(), selectedIndex)
-            gameState.isSolved = isSolved()
+            return gameState
         }
+        return null
     }
 
     private fun isMoveValid(index: Int): Boolean {
@@ -37,14 +38,5 @@ class Game(val size: Int) {
         val areAdjacentVertically = selectedCol == emptyCol && abs(selectedRow - emptyRow) == 1
 
         return areAdjacentHorizontally || areAdjacentVertically
-    }
-
-    private fun isSolved(): Boolean {
-        for (i in 0 until gameState.state.size - 1) {
-            if (gameState.state[i] > gameState.state[i + 1]) {
-                return false
-            }
-        }
-        return true
     }
 }

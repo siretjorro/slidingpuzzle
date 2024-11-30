@@ -28,8 +28,9 @@ class PuzzleViewModel : ViewModel() {
     }
 
     fun onPieceClicked(index: Int) {
-        game.move(index)
-        _gameState.value = game.gameState
+        game.move(index)?.let { gameState ->
+            _gameState.value = gameState
+        }
     }
 
     sealed class Action {

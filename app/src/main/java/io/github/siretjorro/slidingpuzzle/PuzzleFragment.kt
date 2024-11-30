@@ -54,16 +54,16 @@ class PuzzleFragment : Fragment() {
 
     private fun setUpUI() {
         binding.selectImageButton.setOnClickListener { viewModel.onSelectImageClicked() }
-        binding.gridLayout.viewTreeObserver.addOnGlobalLayoutListener(
+        binding.puzzleGridLayout.viewTreeObserver.addOnGlobalLayoutListener(
             object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
-                    val pWidth = binding.gridLayout.width
-                    val pParams: ViewGroup.LayoutParams = binding.gridLayout.layoutParams
+                    val pWidth = binding.puzzleGridLayout.width
+                    val pParams: ViewGroup.LayoutParams = binding.puzzleGridLayout.layoutParams
                     pParams.width = pWidth
                     pParams.height = pWidth
-                    binding.gridLayout.layoutParams = pParams
+                    binding.puzzleGridLayout.layoutParams = pParams
 
-                    binding.gridLayout.viewTreeObserver.removeOnGlobalLayoutListener(this);
+                    binding.puzzleGridLayout.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })
     }
@@ -102,14 +102,20 @@ class PuzzleFragment : Fragment() {
 
     private fun showBoard(gameState: GameState) {
         for (i in gameState.state.indices) {
-            val imageView = binding.gridLayout.getChildAt(i) as ImageView
+            val imageView = binding.puzzleGridLayout.getChildAt(i) as ImageView
             imageView.setImageBitmap(images[gameState.state[i]])
             imageView.setOnClickListener { viewModel.onPieceClicked(i) }
         }
 
         if (!gameState.isSolved) {
-            val emptyImageView = binding.gridLayout.getChildAt(gameState.getEmptyIndex()) as ImageView
-            emptyImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.empty_piece))
+            val emptyImageView =
+                binding.puzzleGridLayout.getChildAt(gameState.getEmptyIndex()) as ImageView
+            emptyImageView.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.empty_piece
+                )
+            )
         }
     }
 }
