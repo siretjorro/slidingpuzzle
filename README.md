@@ -10,7 +10,8 @@ by clicking on them.
 
 The project uses Kotlin as the main language, MVVM architecture, LiveData for updating the UI.
 
-## To do/Improvements
+## To do / Improvements
 
 - make landscape mode more user friendly
+- keep image in memory when app is restarted
 - add tests
