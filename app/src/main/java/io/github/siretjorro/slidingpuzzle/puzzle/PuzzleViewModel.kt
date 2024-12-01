@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.github.siretjorro.slidingpuzzle.game.Game
-import io.github.siretjorro.slidingpuzzle.game.GameState
+import io.github.siretjorro.slidingpuzzle.game.GameImpl
 
 class PuzzleViewModel : ViewModel() {
     private val _gameBoard: MutableLiveData<List<Bitmap>> = MutableLiveData<List<Bitmap>>()
@@ -38,13 +38,19 @@ class PuzzleViewModel : ViewModel() {
         }
 
     fun init(gridSize: Int) {
-        game = Game(gridSize)
+        game = GameImpl(gridSize)
     }
 
     fun onImageSelected(pieces: List<Bitmap>) {
         bitmaps = pieces
-        updateGameState(game.startGame())
+        game.startGame()
+        updateGameState()
         startStopWatch()
+    }
+
+    fun onPieceClicked(position: Int) {
+        game.move(position)
+        updateGameState()
     }
 
     private fun startStopWatch() {
@@ -53,17 +59,11 @@ class PuzzleViewModel : ViewModel() {
         handler.post(stopwatchRunnable)
     }
 
-    fun onPieceClicked(index: Int) {
-        game.move(index)?.let { gameState ->
-            updateGameState(gameState)
-        }
-    }
-
-    private fun updateGameState(gameState: GameState) {
-        _gameBoard.value = getSortedBitmaps(gameState.gameBoard)
-        _isSolved.value = gameState.isSolved
+    private fun updateGameState() {
+        _gameBoard.value = getSortedBitmaps(game.getGameBoard())
+        _isSolved.value = game.isSolved()
         if (isSolved.value != true) {
-            _emptyIndex.value = gameState.getEmptyIndex()
+            _emptyIndex.value = game.getEmptyIndex()
         } else {
             handler.removeCallbacks(stopwatchRunnable)
         }
