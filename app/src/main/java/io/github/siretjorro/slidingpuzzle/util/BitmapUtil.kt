@@ -48,7 +48,7 @@ object BitmapUtil {
         return if (width > height) {
             Bitmap.createBitmap(original, (width - height) / 2, 0, height, height)
         } else if (width < height) {
-            Bitmap.createBitmap(original, 0, (width - height) / 2, width, width)
+            Bitmap.createBitmap(original, 0, (height - width) / 2, width, width)
         } else {
             original
         }
