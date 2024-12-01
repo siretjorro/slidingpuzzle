@@ -59,13 +59,17 @@ class PuzzleViewModel : ViewModel() {
         handler.post(stopwatchRunnable)
     }
 
+    private fun stopStopwatch() {
+        handler.removeCallbacks(stopwatchRunnable)
+    }
+
     private fun updateGameState() {
         _gameBoard.value = getSortedBitmaps(game.getGameBoard())
         _isSolved.value = game.isSolved()
         if (isSolved.value != true) {
             _emptyIndex.value = game.getEmptyIndex()
         } else {
-            handler.removeCallbacks(stopwatchRunnable)
+            stopStopwatch()
         }
     }
 
@@ -76,5 +80,10 @@ class PuzzleViewModel : ViewModel() {
         }
 
         return sortedBitmaps
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopStopwatch()
     }
 }
